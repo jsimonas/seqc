@@ -124,6 +124,7 @@ class AbstractPlatform:
         """
         pass
 
+
 class in_drop(AbstractPlatform):
 
     def __init__(self):
@@ -338,10 +339,10 @@ class in_drop_v3(AbstractPlatform):
         return g
 
     def apply_barcode_correction(self, ra, barcode_files):
-       raise NotImplementedError
+        raise NotImplementedError
 
     def apply_rmt_correction(self, ra, error_rate):
-       raise NotImplementedError
+        raise NotImplementedError
 
 
 class in_drop_v4(AbstractPlatform):
@@ -500,7 +501,7 @@ class in_drop_v5(AbstractPlatform):
         """
         cb1, rest = self.check_spacer(b.sequence[:-1])
         if not cb1:
-             cell, rmt, poly_t = b'', b'', b''
+            cell, rmt, poly_t = b'', b'', b''
         else:
             cb2, rmt, poly_t = self.check_cb2(rest)
             if not cb2:
@@ -525,8 +526,8 @@ class in_drop_v5(AbstractPlatform):
             # First assume it is length 8 through self._barcodes_lengths, then
             # if it isn't in potentials, assume 9.
             if potent_cb2 not in self.potential_encoded_bcs:
-                    potent_cb2 = seq & ((1 << 9 * DNA3Bit.bits_per_base()) - 1)
-                    bc_len = 9
+                potent_cb2 = seq & ((1 << 9 * DNA3Bit.bits_per_base()) - 1)
+                bc_len = 9
             res.insert(0, seq & ((1 << bc_len * DNA3Bit.bits_per_base()) - 1))
             seq >>= bc_len * DNA3Bit.bits_per_base()
 
@@ -721,7 +722,8 @@ class mars_germany(AbstractPlatform):
 
     def merge_function(self, g, b):
         pool = g.sequence.strip()[3:7]  # 4 bp
-        g.sequence = g.sequence.strip()[7:] + b'\n'  # strip() is necessary in case there is a truncated read. \n=good, \n\n=bad
+        # strip() is necessary in case there is a truncated read. \n=good, \n\n=bad
+        g.sequence = g.sequence.strip()[7:] + b'\n'
         # Need to skip over the quality as well
         g.quality = g.quality.strip()[7:] + b'\n'
         seq = b.sequence.strip()
