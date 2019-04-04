@@ -345,7 +345,7 @@ def run(args) -> None:
             fmt='%s', delimiter=',')
 
         log.info('Creating filtered counts matrix.')
-        cell_filter_figure = args.output_prefix +  '_cell_filters.png'
+        cell_filter_figure = args.output_prefix + '_cell_filters.png'
 
         # By pass low count filter for mars seq
         sp_csv, total_molecules, molecules_lost, cells_lost, cell_description = (
