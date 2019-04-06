@@ -217,7 +217,8 @@ def run(args) -> None:
 
     with ec2.instance_clean_up(
             email=args.email, upload=args.upload_prefix, log_name=args.log_name,
-            debug=args.debug):
+            debug=args.debug, terminate=args.terminate
+    ):
         pigz, mutt = verify.executables('pigz', 'mutt')
         if mutt:
             log.notify('mutt executable identified, email will be sent when run '
