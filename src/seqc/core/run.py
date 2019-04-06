@@ -227,7 +227,7 @@ def run(args) -> None:
                        'the user upon termination of SEQC run.')
 
         max_insert_size = args.max_insert_size
-        if (args.platform == "ten_x") or (args.platform == "ten_x_v2"):
+        if (args.platform == "ten_x") or (args.platform == "ten_x_v2") or (args.platform == "ten_x_v3"):
             max_insert_size = 10000
             log.notify("Full length transcripts are used for read mapping in 10x data.")
             args.filter_low_coverage = False
