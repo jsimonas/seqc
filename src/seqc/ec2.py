@@ -643,7 +643,6 @@ class SSHConnection:
 
 class instance_clean_up:
 
-    # todo in the pipeline, self.terminate is always True
     def __init__(self, email=None, upload=None, log_name='seqc.log', terminate=True,
                  debug=False):
         """Execution context for on-server code execution with defined clean-up practices.
