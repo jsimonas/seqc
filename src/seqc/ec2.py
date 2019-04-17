@@ -301,6 +301,24 @@ class AWSInstance(object):
     def setup_seqc(self):
         if self.instance_id is None:
             self.create_instance()
+
+        # tag the instance
+        # for the owner tag, we will just use the RSA key filename
+        # excluding the file extension (.pem)
+        self.ec2.create_tags(
+            Resources=[self.instance_id],
+            Tags=[
+                {
+                    "Key": "Name",
+                    "Value": "SEQC"
+                },
+                {
+                    "Key": "Owner",
+                    "Value": os.path.splitext(os.path.basename(self.rsa_key))[0]
+                },
+            ]
+        )
+
         with SSHConnection(instance_id=self.instance_id,
                            rsa_key=self.rsa_key) as ssh:
             self.mount_volume(ssh)
