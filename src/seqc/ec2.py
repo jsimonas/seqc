@@ -23,7 +23,7 @@ log.logging.getLogger('paramiko').setLevel(log.logging.CRITICAL)
 log.logging.getLogger('boto3').setLevel(log.logging.CRITICAL)
 
 # set default values for a few parameters
-IMAGE_ID = 'ami-8927f1f3'
+IMAGE_ID = 'ami-077fac37c0dbfeb75'
 
 
 def _get_ec2_configuration():
@@ -89,8 +89,13 @@ class AWSInstance(object):
     ec2 = boto3.resource('ec2')
     client = boto3.client('ec2')
 
-    def __init__(self, rsa_key, instance_type, instance_id=None, security_group_id=None,
-                 spot_bid=None, synchronous=False, volume_size=5, **kwargs):
+    def __init__(
+        self,
+        rsa_key, instance_type, instance_id=None, security_group_id=None,
+        spot_bid=None, synchronous=False, volume_size=5,
+        user_tags=None, remote_update=False,
+        **kwargs
+    ):
         """
 
         passed keyword arguments or present in config:
@@ -109,6 +114,7 @@ class AWSInstance(object):
         :param bool synchronous: flag for use in contextmanager or function
           decorator context. If true, the instance will be automatically shut down when
           either (1) the contextmanager exits or (2) the decorated function completes
+        :param str user_tag: comma-separated key-value pairs for tagging ec2 instance
 
         """
         # todo allow overwriting of these arguments with **kwargs
@@ -125,9 +131,18 @@ class AWSInstance(object):
         self._security_group_id = security_group_id
         self.spot_bid = spot_bid
         self.synchronous = synchronous
+        self.remote_update = remote_update
+
+        # if user_tags are supplied
+        if user_tags:
+            # user_tags come in k1:v1,k2:v2 format
+            try:
+                self.user_tags = dict(kv.split(':') for kv in user_tags.split(','))
+            except:
+                raise ValueError('User tags supplied are invalid.')
 
         if not isinstance(volume_size, int) or not 1 <= volume_size < 16384:
-            raise ValueError('volume size must be an integer ')
+            raise ValueError('volume size must be an integer.')
         self.volume_size = volume_size
 
         # additional properties
@@ -298,55 +313,104 @@ class AWSInstance(object):
             'aws configure set aws_secret_access_key %s' % self.aws_secret_access_key)
         ssh.execute('aws configure set region %s' % self.region)
 
+    def construct_ec2_tags(self):
+        """construct tags for ec2 instance"""
+
+        # for the owner tag, we will just use the RSA key filename
+        tags = [
+            {
+                "Key": "Name",
+                "Value": "SEQC"
+            },
+            {
+                "Key": "Owner",
+                "Value": os.path.splitext(os.path.basename(self.rsa_key))[0]
+            },
+        ]
+
+        # add if user's custom tags are supplied
+        if self.user_tags:
+            for k, v in self.user_tags.items():
+                kv = {
+                    "Key": k,
+                    "Value": v
+                }
+                tags.append(kv)
+
+            return tags
+
     def setup_seqc(self):
+
         if self.instance_id is None:
             self.create_instance()
 
         # tag the instance
-        # for the owner tag, we will just use the RSA key filename
-        # excluding the file extension (.pem)
+        tags = self.construct_ec2_tags()
+
         self.ec2.create_tags(
             Resources=[self.instance_id],
-            Tags=[
-                {
-                    "Key": "Name",
-                    "Value": "SEQC"
-                },
-                {
-                    "Key": "Owner",
-                    "Value": os.path.splitext(os.path.basename(self.rsa_key))[0]
-                },
-            ]
+            Tags=tags
         )
 
-        with SSHConnection(instance_id=self.instance_id,
-                           rsa_key=self.rsa_key) as ssh:
+        with SSHConnection(
+            instance_id=self.instance_id, rsa_key=self.rsa_key
+        ) as ssh:
+
             self.mount_volume(ssh)
+
             log.notify('setting aws credentials.')
             self.set_credentials(ssh)
-            log.notify('uploading local SEQC installation to remote instance.')
-            seqc_distribution = os.path.expanduser('~/.seqc/seqc.tar.gz')
-            ssh.execute('mkdir -p software/seqc')
-            ssh.put_file(seqc_distribution, 'software/seqc.tar.gz')
-            ssh.execute(
-                'tar -m -xvf software/seqc.tar.gz -C software/seqc --strip-components 1')
-            log.notify("Sources are uploaded and decompressed, installing seqc.")
-            try:
-                ssh.execute('sudo -H pip3 install -e software/seqc/')
-            except ChildProcessError as e:
-                if 'pip install --upgrade pip' in str(e):
-                    pass
-                else:
+
+            # use the local SEQC package (.tar.gz) to update the remote instance
+            # this will overwrite whatever SEQC version exists in the remote instance
+            if self.remote_update:
+
+                log.notify('uploading local SEQC installation to remote instance.')
+                seqc_distribution = os.path.expanduser('~/.seqc/seqc.tar.gz')
+                ssh.execute('mkdir -p software/seqc')
+                ssh.put_file(seqc_distribution, 'software/seqc.tar.gz')
+                ssh.execute(
+                    'tar -m -xvf software/seqc.tar.gz -C software/seqc --strip-components 1'
+                )
+                log.notify("Sources are uploaded and decompressed, installing seqc.")
+
+                try:
+                    ssh.execute('sudo -H pip3 install software/seqc/')
+                except ChildProcessError as e:
+                    if 'pip install --upgrade pip' in str(e):
+                        pass
+                    else:
+                        raise
+
+                try:  # test the installation
+                    ssh.execute('SEQC -h')
+                except:
+                    log.notify('SEQC installation failed.')
+                    log.exception()
                     raise
 
-            try:  # test the installation
-                ssh.execute('SEQC -h')
+            try:
+                # retrieves the SEQC version information
+                seqc_version, _ = ssh.execute('SEQC --version')
+                # this returns an array
+                seqc_version = seqc_version[0]
+
+                # update the Name tag (e.g. SEQC 0.2.3)
+                self.ec2.create_tags(
+                    Resources=[self.instance_id],
+                    Tags=[
+                        {
+                            "Key": "Name",
+                            "Value": seqc_version
+                        }
+                    ]
+                )
             except:
-                log.notify('SEQC installation failed.')
-                log.exception()
-                raise
+                # just warn and proceed
+                log.notify("Unable to retrieve SEQC version.")
+
             log.notify('SEQC setup complete.')
-            log.notify('instance login: %s' % ssh.login_command())
+            log.notify('instance login: %s' % ssh.obscure_login_command())
 
     def start(self):
         self.setup_seqc()
@@ -648,6 +712,15 @@ class SSHConnection:
         return ('ssh -i {rsa_path} ec2-user@{dns_name}'.format(
             rsa_path=self.rsa_key, dns_name=instance.public_ip_address))
 
+    def obscure_login_command(self):
+        """
+        same as login_command() except it hides the key file location
+        """
+        instance = self.ec2.Instance(self.instance_id)
+        return ('ssh -i <path to your key file> ec2-user@{dns_name}'.format(
+            dns_name=instance.public_ip_address)
+        )
+
     def __enter__(self):
         log.notify('connecting to instance %s via ssh' % self.instance_id)
         self.connect()
@@ -661,8 +734,9 @@ class SSHConnection:
 
 class instance_clean_up:
 
-    def __init__(self, email=None, upload=None, log_name='seqc.log', terminate=True,
-                 debug=False):
+    def __init__(
+        self, email=None, upload=None, log_name='seqc.log', terminate=True, debug=False
+    ):
         """Execution context for on-server code execution with defined clean-up practices.
 
         This is the cognate context manager to aws_setup, and when used with aws_setup(),
