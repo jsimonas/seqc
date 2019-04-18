@@ -22,9 +22,6 @@ from botocore.exceptions import ClientError
 log.logging.getLogger('paramiko').setLevel(log.logging.CRITICAL)
 log.logging.getLogger('boto3').setLevel(log.logging.CRITICAL)
 
-# set default values for a few parameters
-IMAGE_ID = 'ami-077fac37c0dbfeb75'
-
 
 def _get_ec2_configuration():
     """assumes you have awscli and that you have configured it. If so, the default values
@@ -93,7 +90,7 @@ class AWSInstance(object):
         self,
         rsa_key, instance_type, instance_id=None, security_group_id=None,
         spot_bid=None, synchronous=False, volume_size=5,
-        user_tags=None, remote_update=False,
+        user_tags=None, remote_update=False, ami_id="ami-077fac37c0dbfeb75",
         **kwargs
     ):
         """
@@ -124,7 +121,7 @@ class AWSInstance(object):
         self.aws_secret_access_key = defaults['aws_secret_access_key']
         self.region = defaults['region']
         self._rsa_key = rsa_key
-        self.image_id = IMAGE_ID
+        self.image_id = ami_id
         self.instance_type = instance_type
 
         self._instance_id = instance_id
@@ -132,14 +129,7 @@ class AWSInstance(object):
         self.spot_bid = spot_bid
         self.synchronous = synchronous
         self.remote_update = remote_update
-
-        # if user_tags are supplied
-        if user_tags:
-            # user_tags come in k1:v1,k2:v2 format
-            try:
-                self.user_tags = dict(kv.split(':') for kv in user_tags.split(','))
-            except:
-                raise ValueError('User tags supplied are invalid.')
+        self.user_tags = user_tags
 
         if not isinstance(volume_size, int) or not 1 <= volume_size < 16384:
             raise ValueError('volume size must be an integer.')
@@ -328,16 +318,25 @@ class AWSInstance(object):
             },
         ]
 
-        # add if user's custom tags are supplied
+        # if user_tags are supplied
         if self.user_tags:
-            for k, v in self.user_tags.items():
-                kv = {
-                    "Key": k,
-                    "Value": v
-                }
-                tags.append(kv)
+            try:
+                # user_tags come in k1:v1,k2:v2 format
+                # convert to a dictionary
+                user_tags_dict = dict(kv.split(':') for kv in self.user_tags.split(','))
 
-            return tags
+                # convert the dictionary to something suitable for EC2 tag format
+                for k, v in user_tags_dict.items():
+                    kv = {
+                        "Key": k,
+                        "Value": v
+                    }
+                    tags.append(kv)
+            except:
+                # ignore if invalid/not parseable
+                pass
+
+        return tags
 
     def setup_seqc(self):
 
