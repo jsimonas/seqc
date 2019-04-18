@@ -54,7 +54,7 @@ def main(argv):
         verified_args = verification_func(arguments)
         remote_args = {
             k: getattr(verified_args, k) for k in
-            ('rsa_key', 'instance_type', 'spot_bid', 'volume_size') if
+            ('rsa_key', 'instance_type', 'spot_bid', 'volume_size', 'user_tags', 'remote_update') if
             getattr(verified_args, k)}
         clean_up_security_groups()
         ec2.AWSInstance(synchronous=False, **remote_args)(func)(verified_args)
