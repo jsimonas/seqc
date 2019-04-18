@@ -18,7 +18,7 @@ def parse_args(args):
     meta = argparse.ArgumentParser(
         description='Processing Tools for scRNA-seq Experiments')
     meta.add_argument('-v', '--version', action='version',
-                      version='{} {}'.format(meta.prog, version.__version__))
+                      version='{} v{}'.format(meta.prog, version.__version__))
     subparsers = meta.add_subparsers(dest='subparser_name')
 
     # subparser for running experiments
@@ -233,6 +233,14 @@ def parse_args(args):
             help='Do not terminate the ec2 instance upon completion.'
         )
         terminate_parser.set_defaults(terminate=True)
+        r.add_argument(
+            '--user-tags', dest='user_tags', required=False,
+            help='comma-separated key-value pairs for tagging ec2 instance (e.g. k1:v1,k2:v2).'
+        )
+        r.add_argument(
+            '--remote-update', dest='remote_update', action='store_true', default=False,
+            help='whether to use the local SEQC installation package to update the remote instance'
+        )
         r.add_argument(
             '-k', '--rsa-key', metavar='K', default=None,
             help='RSA key registered to your aws account that allowed access to ec2 '
