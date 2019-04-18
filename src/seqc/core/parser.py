@@ -234,6 +234,10 @@ def parse_args(args):
         )
         terminate_parser.set_defaults(terminate=True)
         r.add_argument(
+            '--ami-id', dest='ami_id', required=False,
+            help='ID of the SEQC AMI to use'
+        )
+        r.add_argument(
             '--user-tags', dest='user_tags', required=False,
             help='comma-separated key-value pairs for tagging ec2 instance (e.g. k1:v1,k2:v2).'
         )

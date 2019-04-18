@@ -10,7 +10,7 @@ import boto3
 def clean_up_security_groups():
     """
     Cleanning all the unused security groups that were created/started using SEQC
-    when the number of unused ones is greater than 300 
+    when the number of unused ones is greater than 300
     """
     ec2 = boto3.resource("ec2")
     sgs = list(ec2.security_groups.all())
@@ -67,6 +67,7 @@ def main(argv):
                 "volume_size",
                 "user_tags",
                 "remote_update",
+                "ami_id"
             )
             if getattr(verified_args, k)
         }
