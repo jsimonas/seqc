@@ -68,7 +68,7 @@ setup(
       'multiprocessing_on_dill',
       'jinja2',
       'pycrypto',
-      'cairocffi===0.8.0',
+      'cairocffi==0.8.0',
       'weasyprint==0.42.2',
       'scikit_learn>=0.17'],
     scripts=['src/scripts/SEQC'],
