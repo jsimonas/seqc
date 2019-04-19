@@ -792,21 +792,18 @@ class instance_clean_up:
 
     @staticmethod
     def _get_instance_id():
-        """get an aws instances id from it's private ip address"""
-        p = Popen('/sbin/ifconfig eth0 | grep "inet addr"', shell=True, stdout=PIPE,
-                  stderr=PIPE)
-        ip, err = p.communicate()
+        """get ec2 instance id"""
+
+        p = Popen(
+            "curl --silent http://169.254.169.254/latest/meta-data/instance-id",
+            shell=True, stdout=PIPE, stderr=PIPE
+        )
+
+        instance_id, err = p.communicate()
         if err:  # not an ec2 linux instance, nothing to terminate
             return
-        else:
-            ip = ip.decode().strip().split()[1].replace('addr:', '')
-        ec2 = boto3.resource('ec2')
-        try:  # if a non-ec2 instance, no instance will pass filter
-            instances = ec2.instances.filter(
-                Filters=[{'Name': 'private-ip-address', 'Values': [ip]}])
-        except StopIteration:
-            return
-        return next(iter(instances)).id
+
+        return instance_id.decode().strip()
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         """If an exception occurs, log the exception, email if possible, then terminate
