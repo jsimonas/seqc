@@ -9,6 +9,10 @@ from scipy.stats import gaussian_kde
 from cycler import cycler
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
+# make matplotlib logger less verbose
+import logging
+logging.getLogger('matplotlib').setLevel(logging.WARNING)
+
 try:
     os.environ['DISPLAY']
 except KeyError:
@@ -74,7 +78,7 @@ style_dictionary = {
     'ytick.major.size': 4,
     'ytick.minor.size': 2,
     "ytick.color": dark_gray,
-    
+
 }
 
 matplotlib.rcParams.update(style_dictionary)
@@ -411,7 +415,7 @@ class Diagnostics:
         ax.set_ylim((None, ymax))
         despine(ax)
         return ax
-    
+
     @staticmethod
     def pca_components(fig_name, variance_ratio, pca_comps):
         '''
@@ -444,7 +448,7 @@ class Diagnostics:
 
         fig.tight_layout()
         fig.savefig(fig_name, dpi=300, transparent=True)
-    
+
     @staticmethod
     def phenograph_clustering(fig_name, cell_sizes, clust_info, tsne_comps):
         # sketching tSNE and Phenograph figure
