@@ -150,6 +150,10 @@ def parse_args(args):
     start.add_argument(
         '-k', '--rsa-key', help='RSA key registered to your aws account',
         default=None)
+    start.add_argument(
+        '--ami-id', dest='ami_id', required=False,
+        help='ID of the SEQC AMI to use'
+    )
 
     # NOTEBOOK PARSERS
     notebook_sp = subparsers.add_parser('notebook', help='notebook tools')
