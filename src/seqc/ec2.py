@@ -90,7 +90,7 @@ class AWSInstance(object):
         self,
         rsa_key, instance_type, instance_id=None, security_group_id=None,
         spot_bid=None, synchronous=False, volume_size=5,
-        user_tags=None, remote_update=False, ami_id="ami-077fac37c0dbfeb75",
+        user_tags=None, remote_update=False, ami_id=None,
         **kwargs
     ):
         """
@@ -121,6 +121,8 @@ class AWSInstance(object):
         self.aws_secret_access_key = defaults['aws_secret_access_key']
         self.region = defaults['region']
         self._rsa_key = rsa_key
+        if not ami_id or not ami_id.startswith("ami-"):
+            raise ValueError("You must specify a valid ID for the SEQC AMI to be used.")
         self.image_id = ami_id
         self.instance_type = instance_type
 
