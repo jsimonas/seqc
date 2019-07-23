@@ -178,6 +178,8 @@ class Reader:
         try:
             samfile_iterator = iter(self)
             next(samfile_iterator)
+        except RuntimeError as ex:
+            raise ex
         except:
             raise ValueError('%s is an invalid samfile. Please check file formatting.' %
                              samfile)

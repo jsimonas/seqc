@@ -49,6 +49,8 @@ class AbstractPlatform:
             return ten_x()
         if type == "ten_x_v2":
             return ten_x_v2()
+        if type == "ten_x_v3":
+            return ten_x_v3()
 
     @property
     def num_barcodes(self):
@@ -123,6 +125,7 @@ class AbstractPlatform:
         with status of reads with incorrect cell barcodes updated to 'rmt_error'
         """
         pass
+
 
 class in_drop(AbstractPlatform):
 
@@ -338,10 +341,10 @@ class in_drop_v3(AbstractPlatform):
         return g
 
     def apply_barcode_correction(self, ra, barcode_files):
-       raise NotImplementedError
+        raise NotImplementedError
 
     def apply_rmt_correction(self, ra, error_rate):
-       raise NotImplementedError
+        raise NotImplementedError
 
 
 class in_drop_v4(AbstractPlatform):
@@ -500,7 +503,7 @@ class in_drop_v5(AbstractPlatform):
         """
         cb1, rest = self.check_spacer(b.sequence[:-1])
         if not cb1:
-             cell, rmt, poly_t = b'', b'', b''
+            cell, rmt, poly_t = b'', b'', b''
         else:
             cb2, rmt, poly_t = self.check_cb2(rest)
             if not cb2:
@@ -525,8 +528,8 @@ class in_drop_v5(AbstractPlatform):
             # First assume it is length 8 through self._barcodes_lengths, then
             # if it isn't in potentials, assume 9.
             if potent_cb2 not in self.potential_encoded_bcs:
-                    potent_cb2 = seq & ((1 << 9 * DNA3Bit.bits_per_base()) - 1)
-                    bc_len = 9
+                potent_cb2 = seq & ((1 << 9 * DNA3Bit.bits_per_base()) - 1)
+                bc_len = 9
             res.insert(0, seq & ((1 << bc_len * DNA3Bit.bits_per_base()) - 1))
             seq >>= bc_len * DNA3Bit.bits_per_base()
 
@@ -721,7 +724,8 @@ class mars_germany(AbstractPlatform):
 
     def merge_function(self, g, b):
         pool = g.sequence.strip()[3:7]  # 4 bp
-        g.sequence = g.sequence.strip()[7:] + b'\n'  # strip() is necessary in case there is a truncated read. \n=good, \n\n=bad
+        # strip() is necessary in case there is a truncated read. \n=good, \n\n=bad
+        g.sequence = g.sequence.strip()[7:] + b'\n'
         # Need to skip over the quality as well
         g.quality = g.quality.strip()[7:] + b'\n'
         seq = b.sequence.strip()
@@ -822,6 +826,64 @@ class ten_x_v2(AbstractPlatform):
         cell = combined[0:16]  # v2 chemistry has 16bp barcodes
         rmt = combined[16:26]  # 10 baselength RMT
         poly_t = combined[26:]
+        g.add_annotation((b'', cell, rmt, poly_t))
+        return g
+
+    def apply_barcode_correction(self, ra, barcode_files):
+        """
+        Apply barcode correction and return error rate
+
+        :param ra: Read array
+        :param barcode_files: Valid barcodes files
+        :returns: Error rate table
+
+        """
+        # todo: verify max edit distance
+        error_rate = barcode_correction.ten_x_barcode_correction(ra, self, barcode_files, max_ed=0)
+        return error_rate
+
+    def apply_rmt_correction(self, ra, error_rate):
+        """
+        Apply RMT correction
+
+        :param ra: Read array
+        :param error_rate: Error rate table from apply_barcode_correction
+
+        """
+        rmt_correction.in_drop(ra, error_rate=0.02)
+
+
+class ten_x_v3(AbstractPlatform):
+    # 10x Genomics version 3 chemistry
+
+    def __init__(self):
+        # 16 bp for cellular barcode
+        self.cb_len = 16
+        # 12 bp for molecular barcode (RMT/UMI)
+        self.mb_len = 12
+        AbstractPlatform.__init__(self, [self.cb_len])
+
+    def primer_length(self):
+        """The appropriate value is used to approximate the min_poly_t for each platform.
+        :return: appropriate primer length for 10X
+        """
+        return self.cb_len + self.mb_len
+
+    def merge_function(self, g, b):
+        """
+        merge forward and reverse 10x reads, annotating the reverse read
+        (containing genomic information) with the rmt from the forward read.
+        Pool is left empty, and the cell barcode is obtained from the
+        forward read.
+
+        :param g: genomic fastq sequence data
+        :param b: barcode fastq sequence data
+        :return: annotated genomic sequence.
+        """
+        combined = b.sequence.strip()
+        cell = combined[0:self.cb_len]
+        rmt = combined[self.cb_len:self.cb_len + self.mb_len]
+        poly_t = combined[self.cb_len + self.mb_len:]
         g.add_annotation((b'', cell, rmt, poly_t))
         return g
 

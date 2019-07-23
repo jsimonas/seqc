@@ -18,16 +18,16 @@ def parse_args(args):
     meta = argparse.ArgumentParser(
         description='Processing Tools for scRNA-seq Experiments')
     meta.add_argument('-v', '--version', action='version',
-                      version='{} {}'.format(meta.prog, version.__version__))
+                      version='{} v{}'.format(meta.prog, version.__version__))
     subparsers = meta.add_subparsers(dest='subparser_name')
 
     # subparser for running experiments
-    # can use to make prettier: formatter_class=partial(argparse.HelpFormatter, width=200)    
+    # can use to make prettier: formatter_class=partial(argparse.HelpFormatter, width=200)
     p = subparsers.add_parser('run', help='initiate SEQC runs')
 
     # Platform choices
     choices = [x[0] for x in inspect.getmembers(platforms, inspect.isclass) if
-           issubclass(x[1], platforms.AbstractPlatform)][1:]
+               issubclass(x[1], platforms.AbstractPlatform)][1:]
     p.add_argument('platform',
                    choices=choices,
                    help='which platform are you merging annotations from?')
@@ -150,6 +150,10 @@ def parse_args(args):
     start.add_argument(
         '-k', '--rsa-key', help='RSA key registered to your aws account',
         default=None)
+    start.add_argument(
+        '--ami-id', dest='ami_id', required=False,
+        help='ID of the SEQC AMI to use'
+    )
 
     # NOTEBOOK PARSERS
     notebook_sp = subparsers.add_parser('notebook', help='notebook tools')
@@ -223,6 +227,28 @@ def parse_args(args):
         r.add_argument('--debug', default=False, action='store_true',
                        help='If debug is set, runs that throw errors do not '
                             'terminate the instance they were run on.')
+        terminate_parser = r.add_mutually_exclusive_group(required=False)
+        terminate_parser.add_argument(
+            '--terminate', dest='terminate', action='store_true',
+            help='Terminate the ec2 instance upon completion.'
+        )
+        terminate_parser.add_argument(
+            '--no-terminate', dest='terminate', action='store_false',
+            help='Do not terminate the ec2 instance upon completion.'
+        )
+        terminate_parser.set_defaults(terminate=True)
+        r.add_argument(
+            '--ami-id', dest='ami_id', required=False,
+            help='ID of the SEQC AMI to use'
+        )
+        r.add_argument(
+            '--user-tags', dest='user_tags', required=False,
+            help='comma-separated key-value pairs for tagging ec2 instance (e.g. k1:v1,k2:v2).'
+        )
+        r.add_argument(
+            '--remote-update', dest='remote_update', action='store_true', default=False,
+            help='whether to use the local SEQC installation package to update the remote instance'
+        )
         r.add_argument(
             '-k', '--rsa-key', metavar='K', default=None,
             help='RSA key registered to your aws account that allowed access to ec2 '

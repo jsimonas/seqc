@@ -217,7 +217,8 @@ def run(args) -> None:
 
     with ec2.instance_clean_up(
             email=args.email, upload=args.upload_prefix, log_name=args.log_name,
-            debug=args.debug):
+            debug=args.debug, terminate=args.terminate
+    ):
         pigz, mutt = verify.executables('pigz', 'mutt')
         if mutt:
             log.notify('mutt executable identified, email will be sent when run '
@@ -227,7 +228,7 @@ def run(args) -> None:
                        'the user upon termination of SEQC run.')
 
         max_insert_size = args.max_insert_size
-        if (args.platform == "ten_x") or (args.platform == "ten_x_v2"):
+        if (args.platform == "ten_x") or (args.platform == "ten_x_v2") or (args.platform == "ten_x_v3"):
             max_insert_size = 10000
             log.notify("Full length transcripts are used for read mapping in 10x data.")
             args.filter_low_coverage = False
@@ -345,7 +346,7 @@ def run(args) -> None:
             fmt='%s', delimiter=',')
 
         log.info('Creating filtered counts matrix.')
-        cell_filter_figure = args.output_prefix +  '_cell_filters.png'
+        cell_filter_figure = args.output_prefix + '_cell_filters.png'
 
         # By pass low count filter for mars seq
         sp_csv, total_molecules, molecules_lost, cells_lost, cell_description = (
