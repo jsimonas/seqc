@@ -45,7 +45,7 @@ SEQC can be run on any unix-based operating system, however it also features the
 
 Once all dependencies have been installed, SEQC can be installed on any machine by typing:
 
-    $> git clone https://github.com/ambrosejcarr/seqc.git
+    $> git clone https://github.com/dpeerlab/seqc.git
     $> cd seqc && python3 setup.py install
 
 Please note that to avoid passing the -k/--rsa-key command when you execute SEQC runs, you can also set the environment variable `AWS_RSA_KEY` to the path to your newly created key.
