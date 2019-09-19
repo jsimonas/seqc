@@ -144,7 +144,7 @@ def parse_args(args):
         '-b', '--spot-bid', help='amount to bid for instance in fractions of dollars',
         type=float, default=None)
     start.add_argument(
-        '-t', '--instance-type', default='c4.8xlarge',
+        '-t', '--instance-type', default='r5.2xlarge',
         help='AWS instance type to initialize. '
              'See https://aws.amazon.com/ec2/instance-types/ for valid types')
     start.add_argument(
@@ -207,7 +207,7 @@ def parse_args(args):
             '-u', '--upload-prefix', metavar='U', default=None,
             help='s3 location for data to be uploaded.')
         r.add_argument(
-            '--instance-type', default='c4.8xlarge',
+            '--instance-type', default='r5.2xlarge',
             help='AWS instance type to initialize for this job. '
                  'See https://aws.amazon.com/ec2/instance-types/ for valid types')
         r.add_argument(

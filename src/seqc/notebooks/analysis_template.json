@@ -7,9 +7,7 @@
      "end_time": "2017-09-10T21:50:47.942652Z",
      "start_time": "2017-09-10T17:50:47.937092-04:00"
     },
-    "collapsed": true,
-    "deletable": true,
-    "editable": true
+    "collapsed": true
    },
    "source": [
     "## Notebook Setup\n",
@@ -24,9 +22,7 @@
      "end_time": "2017-09-10T21:50:47.942652Z",
      "start_time": "2017-09-10T17:50:47.937092-04:00"
     },
-    "collapsed": true,
-    "deletable": true,
-    "editable": true
+    "collapsed": true
    },
    "outputs": [],
    "source": [
@@ -37,10 +33,7 @@
   },
   {
    "cell_type": "markdown",
-   "metadata": {
-    "deletable": true,
-    "editable": true
-   },
+   "metadata": {},
    "source": [
     "## Load Imports & Define Environment"
    ]
@@ -52,10 +45,7 @@
     "ExecuteTime": {
      "end_time": "2017-09-10T22:07:23.848096Z",
      "start_time": "2017-09-10T18:07:23.805769-04:00"
-    },
-    "collapsed": false,
-    "deletable": true,
-    "editable": true
+    }
    },
    "outputs": [],
    "source": [
@@ -86,24 +76,20 @@
      "end_time": "2017-09-10T22:14:05.007465Z",
      "start_time": "2017-09-10T18:14:04.983363-04:00"
     },
-    "collapsed": true,
-    "deletable": true,
-    "editable": true
+    "collapsed": true
    },
    "outputs": [],
    "source": [
     "# set some plotting parameters\n",
     "matplotlib.rcParams['figure.figsize'] = [4, 4]\n",
     "matplotlib.rcParams['figure.dpi'] = 100\n",
+    "matplotlib.rcParams['figure.dpi'] = 100\n",
     "warnings.filterwarnings(action=\"ignore\", module=\"matplotlib\", message=\"findfont\")"
    ]
   },
   {
    "cell_type": "markdown",
-   "metadata": {
-    "deletable": true,
-    "editable": true
-   },
+   "metadata": {},
    "source": [
     "## Data preprocessing\n",
     "### Load Data"
@@ -111,10 +97,7 @@
   },
   {
    "cell_type": "markdown",
-   "metadata": {
-    "deletable": true,
-    "editable": true
-   },
+   "metadata": {},
    "source": []
   },
   {
@@ -124,10 +107,7 @@
     "ExecuteTime": {
      "end_time": "2017-09-10T21:51:27.448982Z",
      "start_time": "2017-09-10T17:50:50.827755-04:00"
-    },
-    "collapsed": false,
-    "deletable": true,
-    "editable": true
+    }
    },
    "outputs": [],
    "source": [
@@ -153,10 +133,7 @@
   },
   {
    "cell_type": "markdown",
-   "metadata": {
-    "deletable": true,
-    "editable": true
-   },
+   "metadata": {},
    "source": [
     "### Clean Up\n",
     "\n",
@@ -171,16 +148,13 @@
      "end_time": "2017-09-10T21:51:30.153649Z",
      "start_time": "2017-09-10T17:51:27.450988-04:00"
     },
-    "collapsed": false,
-    "deletable": true,
-    "editable": true,
     "scrolled": false
    },
    "outputs": [],
    "source": [
     "# library size distribution\n",
     "f, axes = plt.subplots(1, n_samples, figsize=(4 * n_samples, 4), squeeze=True)\n",
-        "if n_samples == 1:\n",
+    "if n_samples == 1:\n",
     "    axes = [axes]\n",
     "for (i, sample), ax in zip(counts.groupby(level=0, axis=0), axes):\n",
     "\n",
@@ -194,10 +168,7 @@
   },
   {
    "cell_type": "markdown",
-   "metadata": {
-    "deletable": true,
-    "editable": true
-   },
+   "metadata": {},
    "source": [
     "Then, remove low-coverage cells"
    ]
@@ -210,9 +181,6 @@
      "end_time": "2017-09-10T21:51:34.594922Z",
      "start_time": "2017-09-10T17:51:30.155724-04:00"
     },
-    "collapsed": false,
-    "deletable": true,
-    "editable": true,
     "scrolled": false
    },
    "outputs": [],
@@ -242,9 +210,6 @@
      "end_time": "2017-09-10T21:51:30.153649Z",
      "start_time": "2017-09-10T17:51:27.450988-04:00"
     },
-    "collapsed": false,
-    "deletable": true,
-    "editable": true,
     "scrolled": false
    },
    "outputs": [],
@@ -270,10 +235,7 @@
     "ExecuteTime": {
      "end_time": "2017-09-10T21:51:36.096561Z",
      "start_time": "2017-09-10T17:51:36.060048-04:00"
-    },
-    "collapsed": false,
-    "deletable": true,
-    "editable": true
+    }
    },
    "outputs": [],
    "source": [
@@ -288,10 +250,7 @@
   },
   {
    "cell_type": "markdown",
-   "metadata": {
-    "deletable": true,
-    "editable": true
-   },
+   "metadata": {},
    "source": [
     "<h3> Combine samples </h3>"
    ]
@@ -304,9 +263,7 @@
      "end_time": "2017-09-10T21:51:44.322015Z",
      "start_time": "2017-09-10T17:51:44.290359-04:00"
     },
-    "collapsed": true,
-    "deletable": true,
-    "editable": true
+    "collapsed": true
    },
    "outputs": [],
    "source": [
@@ -329,10 +286,7 @@
     "ExecuteTime": {
      "end_time": "2017-09-10T21:51:48.974611Z",
      "start_time": "2017-09-10T17:51:44.536984-04:00"
-    },
-    "collapsed": false,
-    "deletable": true,
-    "editable": true
+    }
    },
    "outputs": [],
    "source": [
@@ -349,10 +303,7 @@
     "ExecuteTime": {
      "end_time": "2017-09-10T21:51:48.999513Z",
      "start_time": "2017-09-10T17:51:48.976416-04:00"
-    },
-    "collapsed": false,
-    "deletable": true,
-    "editable": true
+    }
    },
    "outputs": [],
    "source": [
@@ -361,20 +312,14 @@
   },
   {
    "cell_type": "markdown",
-   "metadata": {
-    "deletable": true,
-    "editable": true
-   },
+   "metadata": {},
    "source": [
     "<h2> PCA + tSNE for initial structure </h2>"
    ]
   },
   {
    "cell_type": "markdown",
-   "metadata": {
-    "deletable": true,
-    "editable": true
-   },
+   "metadata": {},
    "source": [
     "<h3> Gene selection </h3>"
    ]
@@ -386,10 +331,7 @@
     "ExecuteTime": {
      "end_time": "2017-09-10T21:51:57.939546Z",
      "start_time": "2017-09-10T17:51:56.482629-04:00"
-    },
-    "collapsed": false,
-    "deletable": true,
-    "editable": true
+    }
    },
    "outputs": [],
    "source": [
@@ -405,9 +347,7 @@
      "end_time": "2017-09-10T21:52:01.820626Z",
      "start_time": "2017-09-10T17:51:57.941406-04:00"
     },
-    "collapsed": true,
-    "deletable": true,
-    "editable": true
+    "collapsed": true
    },
    "outputs": [],
    "source": [
@@ -421,10 +361,7 @@
     "ExecuteTime": {
      "end_time": "2017-09-10T21:52:02.044421Z",
      "start_time": "2017-09-10T17:52:01.822675-04:00"
-    },
-    "collapsed": false,
-    "deletable": true,
-    "editable": true
+    }
    },
    "outputs": [],
    "source": [
@@ -441,10 +378,7 @@
     "ExecuteTime": {
      "end_time": "2017-09-10T21:52:06.918971Z",
      "start_time": "2017-09-10T17:52:06.893729-04:00"
-    },
-    "collapsed": false,
-    "deletable": true,
-    "editable": true
+    }
    },
    "outputs": [],
    "source": [
@@ -459,10 +393,7 @@
     "ExecuteTime": {
      "end_time": "2017-09-10T21:52:09.074133Z",
      "start_time": "2017-09-10T17:52:07.435946-04:00"
-    },
-    "collapsed": false,
-    "deletable": true,
-    "editable": true
+    }
    },
    "outputs": [],
    "source": [
@@ -473,10 +404,7 @@
   },
   {
    "cell_type": "markdown",
-   "metadata": {
-    "deletable": true,
-    "editable": true
-   },
+   "metadata": {},
    "source": [
     "<h3> PCA of the data</h3>"
    ]
@@ -489,9 +417,7 @@
      "end_time": "2017-09-10T21:52:09.121008Z",
      "start_time": "2017-09-10T17:52:09.101163-04:00"
     },
-    "collapsed": true,
-    "deletable": true,
-    "editable": true
+    "collapsed": true
    },
    "outputs": [],
    "source": [
@@ -505,10 +431,7 @@
     "ExecuteTime": {
      "end_time": "2017-09-10T21:42:12.362735Z",
      "start_time": "2017-09-10T17:41:54.451187-04:00"
-    },
-    "collapsed": false,
-    "deletable": true,
-    "editable": true
+    }
    },
    "outputs": [],
    "source": [
@@ -524,10 +447,7 @@
     "ExecuteTime": {
      "end_time": "2017-09-10T21:42:12.390319Z",
      "start_time": "2017-09-10T17:42:12.364823-04:00"
-    },
-    "collapsed": false,
-    "deletable": true,
-    "editable": true
+    }
    },
    "outputs": [],
    "source": [
@@ -545,10 +465,7 @@
     "ExecuteTime": {
      "end_time": "2017-09-10T21:52:19.237583Z",
      "start_time": "2017-09-10T17:52:10.624155-04:00"
-    },
-    "collapsed": false,
-    "deletable": true,
-    "editable": true
+    }
    },
    "outputs": [],
    "source": [
@@ -560,11 +477,7 @@
   {
    "cell_type": "code",
    "execution_count": null,
-   "metadata": {
-    "collapsed": false,
-    "deletable": true,
-    "editable": true
-   },
+   "metadata": {},
    "outputs": [],
    "source": [
     "pca_projections.shape"
@@ -572,10 +485,7 @@
   },
   {
    "cell_type": "markdown",
-   "metadata": {
-    "deletable": true,
-    "editable": true
-   },
+   "metadata": {},
    "source": [
     "<h3> Diffusion maps </h3>"
    ]
@@ -587,15 +497,12 @@
     "ExecuteTime": {
      "end_time": "2017-09-10T21:55:08.666490Z",
      "start_time": "2017-09-10T17:54:53.084573-04:00"
-    },
-    "collapsed": false,
-    "deletable": true,
-    "editable": true
+    }
    },
    "outputs": [],
    "source": [
     "# create diffusion operator\n",
-    "T = magic.MAGIC.compute_markov(pca_projections, k=30, ka=10)"
+    "T = magic.MAGIC_core.compute_markov(pca_projections, k=30, ka=10)"
    ]
   },
   {
@@ -605,10 +512,7 @@
     "ExecuteTime": {
      "end_time": "2017-09-10T22:00:33.724124Z",
      "start_time": "2017-09-10T18:00:33.598534-04:00"
-    },
-    "collapsed": false,
-    "deletable": true,
-    "editable": true
+    }
    },
    "outputs": [],
    "source": [
@@ -634,10 +538,7 @@
   },
   {
    "cell_type": "markdown",
-   "metadata": {
-    "deletable": true,
-    "editable": true
-   },
+   "metadata": {},
    "source": [
     "<h4> Imputed data </h4>"
    ]
@@ -649,10 +550,7 @@
     "ExecuteTime": {
      "end_time": "2017-09-10T22:02:11.983322Z",
      "start_time": "2017-09-10T18:02:02.594638-04:00"
-    },
-    "collapsed": false,
-    "deletable": true,
-    "editable": true
+    }
    },
    "outputs": [],
    "source": [
@@ -664,10 +562,7 @@
   },
   {
    "cell_type": "markdown",
-   "metadata": {
-    "deletable": true,
-    "editable": true
-   },
+   "metadata": {},
    "source": [
     "<h3> tSNE </h3>"
    ]
@@ -676,9 +571,7 @@
    "cell_type": "code",
    "execution_count": null,
    "metadata": {
-    "collapsed": true,
-    "deletable": true,
-    "editable": true
+    "collapsed": true
    },
    "outputs": [],
    "source": [
@@ -697,10 +590,7 @@
     "ExecuteTime": {
      "end_time": "2017-09-10T22:10:16.177337Z",
      "start_time": "2017-09-10T18:08:55.609896-04:00"
-    },
-    "collapsed": false,
-    "deletable": true,
-    "editable": true
+    }
    },
    "outputs": [],
    "source": [
@@ -717,10 +607,7 @@
     "ExecuteTime": {
      "end_time": "2017-09-10T22:14:13.949437Z",
      "start_time": "2017-09-10T18:14:12.226167-04:00"
-    },
-    "collapsed": false,
-    "deletable": true,
-    "editable": true
+    }
    },
    "outputs": [],
    "source": [
@@ -738,9 +625,7 @@
    "cell_type": "code",
    "execution_count": null,
    "metadata": {
-    "collapsed": true,
-    "deletable": true,
-    "editable": true
+    "collapsed": true
    },
    "outputs": [],
    "source": [
@@ -754,10 +639,7 @@
     "ExecuteTime": {
      "end_time": "2017-09-11T00:37:15.032455Z",
      "start_time": "2017-09-10T20:37:14.132531-04:00"
-    },
-    "collapsed": false,
-    "deletable": true,
-    "editable": true
+    }
    },
    "outputs": [],
    "source": [
@@ -777,10 +659,7 @@
   },
   {
    "cell_type": "markdown",
-   "metadata": {
-    "deletable": true,
-    "editable": true
-   },
+   "metadata": {},
    "source": [
     "<h3> Phenograph for clustering </h3>"
    ]
@@ -793,9 +672,7 @@
      "end_time": "2017-09-11T00:37:29.123369Z",
      "start_time": "2017-09-10T20:37:29.101067-04:00"
     },
-    "collapsed": true,
-    "deletable": true,
-    "editable": true
+    "collapsed": true
    },
    "outputs": [],
    "source": [
@@ -809,10 +686,7 @@
     "ExecuteTime": {
      "end_time": "2017-09-11T00:39:46.973324Z",
      "start_time": "2017-09-10T20:39:41.268696-04:00"
-    },
-    "collapsed": false,
-    "deletable": true,
-    "editable": true
+    }
    },
    "outputs": [],
    "source": [
@@ -830,10 +704,7 @@
     "ExecuteTime": {
      "end_time": "2017-09-11T00:43:13.828641Z",
      "start_time": "2017-09-10T20:43:11.486570-04:00"
-    },
-    "collapsed": false,
-    "deletable": true,
-    "editable": true
+    }
    },
    "outputs": [],
    "source": [
@@ -860,10 +731,7 @@
   },
   {
    "cell_type": "markdown",
-   "metadata": {
-    "deletable": true,
-    "editable": true
-   },
+   "metadata": {},
    "source": [
     "<h4> Cluster composition </h4>"
    ]
@@ -871,11 +739,7 @@
   {
    "cell_type": "code",
    "execution_count": null,
-   "metadata": {
-    "collapsed": false,
-    "deletable": true,
-    "editable": true
-   },
+   "metadata": {},
    "outputs": [],
    "source": [
     "proportions = pd.DataFrame(\n",
@@ -891,10 +755,7 @@
   },
   {
    "cell_type": "markdown",
-   "metadata": {
-    "deletable": true,
-    "editable": true
-   },
+   "metadata": {},
    "source": [
     "<h3> Gene expression patterns </h3>"
    ]
@@ -907,9 +768,7 @@
      "end_time": "2017-09-11T00:50:11.134629Z",
      "start_time": "2017-09-10T20:50:11.098043-04:00"
     },
-    "collapsed": true,
-    "deletable": true,
-    "editable": true
+    "collapsed": true
    },
    "outputs": [],
    "source": [
@@ -935,10 +794,7 @@
     "ExecuteTime": {
      "end_time": "2017-09-11T00:50:13.535738Z",
      "start_time": "2017-09-10T20:50:12.140885-04:00"
-    },
-    "collapsed": false,
-    "deletable": true,
-    "editable": true
+    }
    },
    "outputs": [],
    "source": [
@@ -948,10 +804,7 @@
   },
   {
    "cell_type": "markdown",
-   "metadata": {
-    "deletable": true,
-    "editable": true
-   },
+   "metadata": {},
    "source": [
     "<h3> Save results </h3>"
    ]
@@ -960,9 +813,7 @@
    "cell_type": "code",
    "execution_count": null,
    "metadata": {
-    "collapsed": true,
-    "deletable": true,
-    "editable": true
+    "collapsed": true
    },
    "outputs": [],
    "source": [
@@ -989,7 +840,7 @@
    "name": "python",
    "nbconvert_exporter": "python",
    "pygments_lexer": "ipython3",
-   "version": "3.6.4"
+   "version": "3.6.5"
   },
   "nav_menu": {},
   "toc": {
@@ -1017,5 +868,5 @@
   }
  },
  "nbformat": 4,
- "nbformat_minor": 0
+ "nbformat_minor": 1
 }

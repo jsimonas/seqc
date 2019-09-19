@@ -138,7 +138,7 @@ class TestSEQC(unittest.TestCase):
             '-e', self.email,
             '-a', SAMFILE % platform,
             '-k', self.rsa_key,
-            '--instance-type', 'c4.8xlarge',
+            '--instance-type', 'r5.2xlarge',
             '--debug',
             # '--spot-bid', '1.0'
         ]
