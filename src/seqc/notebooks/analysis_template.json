@@ -83,7 +83,7 @@
     "# set some plotting parameters\n",
     "matplotlib.rcParams['figure.figsize'] = [4, 4]\n",
     "matplotlib.rcParams['figure.dpi'] = 100\n",
-    "matplotlib.rcParams['figure.dpi'] = 100\n",
+    "matplotlib.rcParams['figure.facecolor'] = 'white'\n",
     "warnings.filterwarnings(action=\"ignore\", module=\"matplotlib\", message=\"findfont\")"
    ]
   },
