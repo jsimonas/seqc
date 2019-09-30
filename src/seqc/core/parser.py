@@ -102,6 +102,11 @@ def parse_args(args):
                    help='FDR rate for low coverage reads filter in mars-seq datasets. '
                         'Float between 0 and 1, default=0.25',
                    default=0.25, type=float)
+    # right now, it doesn't do much except you can override the default value for `--max-insert-size`
+    f.add_argument(
+        '--filter-mode', dest='filter_mode', type=str, default="scRNA-seq",
+        help='Indicate whether this is to process a snRNA-seq data'
+    )
 
     s = p.add_argument_group('alignment arguments')
     s.add_argument('--star-args', default=None, nargs='*',
