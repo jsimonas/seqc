@@ -227,11 +227,27 @@ def run(args) -> None:
             log.notify('mutt was not found on this machine; an email will not be sent to '
                        'the user upon termination of SEQC run.')
 
-        max_insert_size = args.max_insert_size
+        # turn off lower coverage filter for 10x
         if (args.platform == "ten_x") or (args.platform == "ten_x_v2") or (args.platform == "ten_x_v3"):
-            max_insert_size = 10000
-            log.notify("Full length transcripts are used for read mapping in 10x data.")
             args.filter_low_coverage = False
+
+        max_insert_size = args.max_insert_size
+        if args.filter_mode == "scRNA-seq":
+            # for scRNA-seq
+            if (args.platform == "ten_x") or (args.platform == "ten_x_v2") or (args.platform == "ten_x_v3"):
+                # set max_transcript_length (max_insert_size) = 10000
+                max_insert_size = 10000
+                log.notify("Full length transcripts are used for read mapping in 10x data.")
+        elif args.filter_mode == "snRNA-seq":
+            # for snRNA-seq
+            # e.g. 2304700 # hg38
+            # e.g. 4434881 # mm38
+            max_insert_size = args.max_insert_size
+        else:
+            # all others
+            max_insert_size = args.max_insert_size
+
+        log.notify("max_insert_size is set to {}".format(max_insert_size))
 
         log.args(args)
 
