@@ -105,7 +105,7 @@ def parse_args(args):
     # right now, it doesn't do much except you can override the default value for `--max-insert-size`
     f.add_argument(
         '--filter-mode', dest='filter_mode', type=str, default="scRNA-seq",
-        help='Indicate whether this is to process a snRNA-seq data'
+        help='Either "scRNA-seq" or "snRNA-seq")'
     )
 
     s = p.add_argument_group('alignment arguments')
