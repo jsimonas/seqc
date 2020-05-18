@@ -75,12 +75,13 @@ def run(args) -> None:
             arguments.merged_fastq is not None else None)
 
         # check if the index must be downloaded
-        if any((arguments.alignment_file, arguments.read_array)):
-            index_link = arguments.index + 'annotations.gtf'
-        else:
-            index_link = arguments.index
-        download.s3_data([index_link], dir_ + '/index/')
-        arguments.index = dir_ + '/index/'
+        if (arguments.remote):
+            if any((arguments.alignment_file, arguments.read_array)):
+                index_link = arguments.index + 'annotations.gtf'
+            else:
+                index_link = arguments.index
+            download.s3_data([index_link], dir_ + '/index/')
+            arguments.index = dir_ + '/index/'
 
         # check if barcode files must be downloaded
         arguments.barcode_files = download.s3_data(
